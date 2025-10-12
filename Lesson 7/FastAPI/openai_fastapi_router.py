@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field, field_validator
 import requests
 import os
@@ -25,6 +26,57 @@ api_usage_tracker = {
     "blocked_users": set()
 }
 
+# Custom handler to provide clearer 422 messages
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Return a more descriptive 422 response when request validation fails.
+
+    Adds human-friendly hints for common cases like temperature being out of range.
+    """
+    errors = exc.errors()
+    detailed_errors = []
+
+    for err in errors:
+        loc = err.get("loc", [])
+        loc_str = ".".join(str(x) for x in loc)
+        msg = err.get("msg")
+        typ = err.get("type")
+        ctx = err.get("ctx") or {}
+
+        hint = None
+        # Provide specific guidance for temperature range violations
+        if "temperature" in loc_str:
+            ge = ctx.get("ge")
+            le = ctx.get("le")
+            if ge is not None and le is not None:
+                hint = f"Temperature must be between {ge} and {le}."
+            elif ge is not None:
+                hint = f"Temperature must be >= {ge}."
+            elif le is not None:
+                hint = f"Temperature must be <= {le}."
+
+        detailed_errors.append({
+            "field": loc_str,
+            "message": msg,
+            "type": typ,
+            "hint": hint
+        })
+
+    return JSONResponse(
+        status_code=422,
+        content={
+            "status_code": 422,
+            "error": "Unprocessable Entity",
+            "method": request.method,
+            "path": str(request.url.path),
+            # Original FastAPI/Pydantic validation details
+            "detail": errors,
+            # Enhanced, human-friendly details with hints
+            "enhanced_detail": detailed_errors,
+            "explanation": "Your request body failed validation. Fix the invalid fields and try again."
+        },
+    )
+
 class ChatMessage(BaseModel):
     role: str = Field(..., pattern="^(system|user|assistant)$")
     content: str = Field(..., min_length=1, max_length=10000)
@@ -32,7 +84,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     messages: List[ChatMessage] = Field(..., min_items=1, max_items=50)
     model: Optional[str] = Field("gpt-4o-mini", pattern="^(gpt-4o|gpt-4o-mini|gpt-3.5-turbo)$")
-    temperature: float = Field(0.7, ge=0.0, le=2.0)
+    temperature: float = Field(0.7, ge=0.5, le=1.0)
     max_tokens: Optional[int] = Field(None, ge=1, le=4096)
     stream: bool = Field(False)
     user_id: Optional[str] = Field(None, max_length=100)

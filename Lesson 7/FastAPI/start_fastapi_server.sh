@@ -4,21 +4,6 @@
 
 echo "Starting ChatGPT API Router..."
 
-# Check if virtual environment exists
-if [ ! -d "venv" ]; then
-    echo "Creating virtual environment..."
-    python3 -m venv venv
-fi
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies if requirements.txt exists
-if [ -f "requirements.txt" ]; then
-    echo "Installing dependencies..."
-    pip install -r requirements.txt
-fi
-
 # Set default environment variables if not set
 export OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 export OPENAI_MODEL="${OPENAI_MODEL:-gpt-4o-mini}"

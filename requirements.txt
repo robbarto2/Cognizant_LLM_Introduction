@@ -7,3 +7,15 @@ uvicorn[standard]==0.32.1
 # Optional but useful dependencies
 python-multipart==0.0.20  # For form data handling
 python-dotenv==1.0.1      # For loading .env files
+
+boto3
+chromadb
+langchain
+langchain-community
+langchain-ollama
+langchain-text-splitters
+langsmith
+matplotlib
+numpy
+streamlit
+torch

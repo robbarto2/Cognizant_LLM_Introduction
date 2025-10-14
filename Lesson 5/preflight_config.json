@@ -1,0 +1,11 @@
+{
+  "model": "distilgpt2",
+  "start_mode": "scratch",
+  "seq_len": 128,
+  "EBS": 32,
+  "base_lr": 0.0003,
+  "warmup_steps": 40,
+  "dev_prompt": "Eval",
+  "seed": 42,
+  "truncation_rule": "balanced"
+}

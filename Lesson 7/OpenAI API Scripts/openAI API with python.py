@@ -16,7 +16,7 @@ resp = requests.post(
             {"role": "system", "content": "You are terse."},
             {"role": "user", "content": "Give a 1-paragraph overview of Model Context Protocol."}
         ],
-        "temperature": 0.2
+        "temperature": .2
     },
     timeout=60
 )

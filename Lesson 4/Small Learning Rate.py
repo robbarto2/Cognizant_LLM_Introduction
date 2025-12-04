@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -57,7 +58,8 @@ def train_model_with_real_time_plot(model, x_train, y_train, num_epochs=10000, l
             epoch_text.set_position((-5, 0.75))
 
         return line, epoch_text
-
+    plt.draw()
+    plt.pause(4)
     ani = animation.FuncAnimation(fig, update, fargs=(model, x_train, line, epoch_text), frames=num_epochs // 10 + 1, blit=True, interval=100, repeat=False)
     plt.show()
 

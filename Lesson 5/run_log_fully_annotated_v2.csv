@@ -1,0 +1,2 @@
+date,config,EBS,LR,best_metric,decision,notes
+2025-12-04,cfg_demo_lora_r8,64,0.0002,EM=88.1,Try LR=1.5e-4 next,dev set v1

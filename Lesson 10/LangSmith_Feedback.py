@@ -48,7 +48,7 @@ tools = [
     Tool(
         name="LocalDocQA",
         func=lambda query: rag_chain.invoke({"query": query})["result"],
-        description="Use this tool to answer questions about climate change using the local document."
+        description="Use this tool to answer questions using the local document."
     ),
     Tool(
         name="WikipediaSearch",
@@ -105,7 +105,7 @@ agent_executor = AgentExecutor(
 # Run the agent with LangSmith tracing context to capture run_id
 print("Running agentic query...")
 with trace(name="Agentic Query") as run:
-    response = agent_executor.invoke({"input": "What causes the most CO2 emissions?"})
+    response = agent_executor.invoke({"input": "Tell me about Riemann Integrals"})
     run_id = run.id  # This is the run_id for LangSmith feedback
 print("[Agentic LangChain]", response["output"])
 

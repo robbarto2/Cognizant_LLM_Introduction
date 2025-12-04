@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -61,11 +62,6 @@ ax.legend()
 fig, ax = plt.subplots()
 ax.scatter(x_data, y_data, label='Data')
 line, = ax.plot([], [], 'r-', label='Prediction')
-ax.set_xlim(x_data.min(), x_data.max())
-ax.set_ylim(y_data.min(), y_data.max())
-ax.set_title("Gradient Descent Convergence")
-ax.legend()
-
 # Add epoch counter text
 epoch_text = ax.text(0.05, 0.95, '', transform=ax.transAxes, fontsize=12, verticalalignment='top')
 
@@ -78,7 +74,9 @@ def animate(i):
     epoch_text.set_text(f'Epoch: {i+1}/{epochs}')
     return line, epoch_text
 
+plt.draw()
+plt.pause(10)
+
 ani = FuncAnimation(fig, animate, frames=len(w_history), interval=100, blit=True, repeat=False)
 
 plt.show()
-

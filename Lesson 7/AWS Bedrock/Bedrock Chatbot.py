@@ -6,7 +6,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 import re
 
 # --- AWS Setup ---
-os.environ["AWS_PROFILE"] = "robbarto"
+os.environ["AWS_PROFILE"] = "aws_userID"
 bedrock_client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
 # --- Mistral 7B Instruct Model ID ---
